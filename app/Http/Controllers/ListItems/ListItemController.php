@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\ListItems;
 
+use App\DataTables\ListItems\ListItemDataTable;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 
@@ -12,9 +13,9 @@ class ListItemController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(ListItemDataTable $dataTable)
     {
-       return view('listItems.index');
+       return $dataTable->render('list_items.index');
     }
 
     /**
