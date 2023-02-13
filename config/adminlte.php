@@ -312,7 +312,7 @@ return [
         //     'can'  => 'manage-blog',
         // ],
         [
-            'text'        => 'pages',
+            'text'        => 'list_items',
             'url'         => 'list-items',
             'label_color' => 'success',
         ],

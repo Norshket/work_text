@@ -23,6 +23,7 @@ Auth::routes();
 
 Route::get('/home', [App\Http\Controllers\HomeController::class, 'index'])->name('home');
 
-Route::middleware('auth')->group(function(){
-    Route::resource('list-items', ListItemController::class);
+Route::middleware('auth')->group(function () {
+    Route::get('list-items/datatable', [ListItemController::class, 'datatable'])->name('list_items.datatable');
+    Route::resource('list-items', ListItemController::class)->except('show');
 });
