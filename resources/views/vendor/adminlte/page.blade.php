@@ -15,19 +15,19 @@
     <div class="wrapper">
 
         {{-- Preloader Animation --}}
-        @if($layoutHelper->isPreloaderEnabled())
+        @if ($layoutHelper->isPreloaderEnabled())
             @include('adminlte::partials.common.preloader')
         @endif
 
         {{-- Top Navbar --}}
-        @if($layoutHelper->isLayoutTopnavEnabled())
+        @if ($layoutHelper->isLayoutTopnavEnabled())
             @include('adminlte::partials.navbar.navbar-layout-topnav')
         @else
             @include('adminlte::partials.navbar.navbar')
         @endif
 
         {{-- Left Main Sidebar --}}
-        @if(!$layoutHelper->isLayoutTopnavEnabled())
+        @if (!$layoutHelper->isLayoutTopnavEnabled())
             @include('adminlte::partials.sidebar.left-sidebar')
         @endif
 
@@ -44,7 +44,7 @@
         @endif
 
         {{-- Right Control Sidebar --}}
-        @if(config('adminlte.right_sidebar'))
+        @if (config('adminlte.right_sidebar'))
             @include('adminlte::partials.sidebar.right-sidebar')
         @endif
 
@@ -52,6 +52,19 @@
 @stop
 
 @section('adminlte_js')
+    <script>
+        window.socketId = null;
+        window.token = $('meta[name="csrf-token"]').attr('content');
+        $.ajaxSetup({
+            beforeSend: function(xhr) {
+                xhr.setRequestHeader('X-CSRF-TOKEN', token);
+                xhr.setRequestHeader("X-Socket-ID", socketId);
+            }
+        });
+    </script>
+    <script src="{{ asset('js/main.js') }}"></script>
+
+
     @stack('js')
     @yield('js')
 @stop
