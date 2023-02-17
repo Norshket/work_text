@@ -15,7 +15,9 @@ return new class extends Migration
     {
         Schema::create('list_items', function (Blueprint $table) {
             $table->id();
-            $table->string('name')->comment("Наименование");
+            $table->string('name');
+            $table->text('text')->nullable();
+            $table->softDeletes();
             $table->timestamps();
         });
     }

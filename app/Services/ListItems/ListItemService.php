@@ -2,11 +2,10 @@
 
 namespace  App\Services\ListItems;
 
+use App\Models\Hashtags\Hashtag;
 use App\Models\ListItems\ListItem;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
-
-use function Termwind\render;
 
 class ListItemService
 {
@@ -15,19 +14,24 @@ class ListItemService
     /**
      * @return array
      */
-    public function  index():array
+    public function  index(): array
     {
         return [
             'dataTable' => $this->viewDataTable(),
         ];
     }
 
-    public function  create():array
+    public function  create(): array
     {
+
+        $data = [
+            'method' => 'create',
+        ];
+
         return [
             'action'    => 'success',
             'method'    => 'create',
-            'html'      => view('list_items.components.form')->render()
+            'html'      => view('list_items.components.form')->with($data)->render()
         ];
     }
 
@@ -38,7 +42,8 @@ class ListItemService
      */
     public function store(array $request): bool
     {
-        ListItem::create($request);
+        $listItem = ListItem::create($request);
+        $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
 
@@ -47,15 +52,15 @@ class ListItemService
      * 
      * @return array
      */
-    public function edit(ListItem $listItem):array
+    public function edit(ListItem $listItem): array
     {
         $data = [
-            'model' => $listItem
+            'model'     => $listItem->load('hashtags'),
+            'method'    => 'edit',
         ];
 
         return [
             'action'    => 'success',
-            'method'    => 'edit',
             'html'      => view('list_items.components.form')->with($data)->render()
         ];
     }
@@ -68,7 +73,9 @@ class ListItemService
      */
     public function update(ListItem $listItem, array $request): bool
     {
-        return $listItem->update($request);
+        $listItem = tap($listItem)->update($request);
+        $this->syncHashtags($listItem, $request['hashtags'] ?? []);
+        return true;
     }
 
     /**
@@ -83,7 +90,7 @@ class ListItemService
 
     public function getQueryDataTable()
     {
-        return ListItem::select('id', 'name');
+        return ListItem::select('id', 'name', 'text');
     }
 
 
@@ -91,15 +98,14 @@ class ListItemService
     {
         return DataTables::of($this->getQueryDataTable())
 
-        ->addColumn('actions', function($item){
-            $data = [
-                'delete' => route('list-items.destroy' , $item),
-                'edit' => route('list-items.edit' , $item)
-            ];
-            return view('list_items.components.action_button')->with($data);
-        })
-        
-        ->toJson();
+            ->addColumn('actions', function ($item) {
+                $data = [
+                    'delete' => route('list-items.destroy', $item),
+                    'edit' => route('list-items.edit', $item)
+                ];
+                return view('list_items.components.action_button')->with($data);
+            })
+            ->toJson();
     }
 
 
@@ -140,10 +146,28 @@ class ListItemService
             [
                 'title'     => __($this->translation . 'datatable.actions'),
                 'data'      => 'actions',
-                'searchable'=> false,
-                'sortable'  => false,                
+                'searchable' => false,
+                'sortable'  => false,
                 'width'     => '10%',
-            ]            
+            ]
         ];
+    }
+
+    /**
+     * Крепим хэштеги, если в базе таковых нет - создаем
+     *
+     * @param ListItem $listItem
+     * @param array $hashtags
+     * 
+     * @return bool
+     */
+    public function syncHashtags(ListItem $listItem, array $hashtags): bool
+    {
+        $hashtagIds =[];
+        foreach ($hashtags as $item) {
+            $hashtagIds[] = Hashtag::firstOrCreate(['name' => $item])->id;
+        }
+        $listItem->hashtags()->sync($hashtagIds);
+        return true;
     }
 }

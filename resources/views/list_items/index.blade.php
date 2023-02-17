@@ -20,7 +20,7 @@
         </div>
     </div>
 
-    @include('vendor.modals.default_modal')
+    @include('vendor.modals.modal_lg')
     @include('vendor.modals.delete')
 @endsection
 

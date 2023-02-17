@@ -24,7 +24,9 @@ class ListItemRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => 'required|string|max:255'
+            'name'          => 'required|string|max:255',
+            'text'          => 'nullable|string|max:65535',
+            'hashtags.*'    => 'nullable|string|max:255,'
         ];
     }
 
@@ -34,7 +36,9 @@ class ListItemRequest extends FormRequest
     public function attributes(): array
     {
         return [
-            'name' => __('list_items.edit.name')
+            'name'          => __('list_items.edit.name'),
+            'text'          => __('list_items.edit.text'),
+            'hashtags.*'    => __('list_items.edit.hashtags'),
         ];
     }
 }

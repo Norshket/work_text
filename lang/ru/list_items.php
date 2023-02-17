@@ -1,7 +1,9 @@
 <?php
 return [
     'edit' => [
-        'name'  => 'Нименование',
+        'name'      => 'Нименование',
+        'hashtags'  => 'Теги',
+        'text'      => 'Текст',
     ],
 
     'datatable' => [

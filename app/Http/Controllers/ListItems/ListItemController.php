@@ -75,9 +75,9 @@ class ListItemController extends Controller
      * 
      * @return JsonResponse
      */
-    public function update(ListItemRequest $request, ListItem $listItem): JsonResponse
+    public function update(ListItem $listItem, ListItemRequest $request): JsonResponse
     {
-        $data = $this->service->edit($request->validated(), $listItem);
+        $data = $this->service->update($listItem, $request->validated());
         return response()->json($data);
     }
 
