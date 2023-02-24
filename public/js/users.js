@@ -1,8 +1,8 @@
 
-let listItem  = {    
+let user  = {    
     create:function(url){
         $.get(url).then(function(data){     
-            listItem.showModal(data)
+            user.showModal(data)
         }).catch(({error}) => console.log(error))
     },
 
@@ -18,7 +18,7 @@ let listItem  = {
             processData: false,
             contentType: false,
             success: function(data){        
-                listItem.hideModal();
+                user.hideModal();
             },
             error: function({responseJSON}){
                 Object.values( responseJSON.errors).map(error => {
@@ -31,7 +31,7 @@ let listItem  = {
     edit:function(url){
     
         $.get(url).then(function(data){
-            listItem.showModal(data);
+            user.showModal(data);
         }).catch(({error}) => console.log(error))
     },
     
@@ -47,7 +47,7 @@ let listItem  = {
             contentType: false,
             processData: false,
             success: function(data){        
-                listItem.hideModal();
+                user.hideModal();
             },
             error: function({responseJSON}){
                 Object.values( responseJSON.errors).map(error => {
@@ -59,29 +59,12 @@ let listItem  = {
     
     showModal: function(data){
         $('.modal-form').find('.modal-dialog').append(data.html);
-        $('.ajax-select2').select2();
-        $("#image").cropzee({
-            aspectRatio: 1,
-            onCropEnd: function (params) {
-                $('#image-x').val(params.x)
-                $('#image-y').val(params.y)
-                $('#image-width').val(params.width)
-                $('#image-height').val(params.height)
-            },
-            startSize:function(params){
-                $('#image-x').val(params.x)
-                $('#image-y').val(params.y)
-                $('#image-width').val(params.width)
-                $('#image-height').val(params.height)
-            }
-        })
-
         $('.modal-form').show();   
     },
     
     hideModal: function(){
         $('.modal-form').hide();
         $('.modal-form').find('.modal-dialog').children().remove();
-        $('#list_items-table').DataTable().ajax.reload();    
+        $('#users-table').DataTable().ajax.reload();    
     }
 }

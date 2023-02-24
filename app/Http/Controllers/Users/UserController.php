@@ -3,10 +3,23 @@
 namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Users\UserDataTableRequest;
+use App\Http\Requests\Users\UserRequest;
+use App\Models\User;
+use App\Services\Users\UserService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+
+    protected $service;
+
+    function __construct(UserService $service)
+    {
+        $this->service = $service;
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -14,39 +27,32 @@ class UserController extends Controller
      */
     public function index()
     {
-        //
+        $data = $this->service->index();
+        return view('list_items.index')->with($data);
     }
 
     /**
      * Show the form for creating a new resource.
      *
-     * @return \Illuminate\Http\Response
+     * @return JsonResponse
      */
-    public function create()
+    public function create(): JsonResponse
     {
-        //
+        $data = $this->service->create();
+        return response()->json($data);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
+     * @param UserRequest $request
+     * 
+     * @return JsonResponse
      */
-    public function store(Request $request)
+    public function store(UserRequest $request): JsonResponse
     {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        $data = $this->service->store($request->validated());
+        return response()->json($data);
     }
 
     /**
@@ -55,31 +61,46 @@ class UserController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function edit($id)
+    public function edit(User $user)
     {
-        //
+        $data = $this->service->edit($user);
+        return response()->json($data);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * @param UserRequest $request
+     * 
+     * @return JsonResponse
      */
-    public function update(Request $request, $id)
+    public function update(User $user, UserRequest $request): JsonResponse
     {
-        //
+        $data = $this->service->update($user, $request->validated());
+        return response()->json($data);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
+     * @param User $user
+     * 
+     * @return JsonResponse
      */
-    public function destroy($id)
+    public function destroy(User $user): JsonResponse
     {
-        //
+        $data = $this->service->delete($user);
+        return response()->json($data);
+    }
+
+    /**
+     * @param UserDataTableRequest $request
+     * 
+     * @return JsonResponse
+     */
+    public function datatable(UserDataTableRequest $request): JsonResponse
+    {
+        return $this->service->datatable($request->validated());
     }
 }

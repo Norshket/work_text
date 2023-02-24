@@ -9,7 +9,7 @@
         <div class="card-body">
             <div class="raw">
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="listItem.create('{{ route('list-items.create') }}')">
+                    <button type="button" class="btn btn-primary" onclick="listItem.create('{{ route('users.create') }}')">
                         Добавить
                     </button>
                 </div>
@@ -27,6 +27,5 @@
 
 @push('js')
     {{ $dataTable->scripts() }}
-    <script src="{{ asset('vendor/cropzee/cropzee.js') }}" defer></script>
-    <script src="{{ asset('js/list_items.js') }}"></script>
+    <script src="{{ asset('js/users.js') }}"></script>
 @endpush

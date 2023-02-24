@@ -26,7 +26,13 @@ class ListItemRequest extends FormRequest
         return [
             'name'          => 'required|string|max:255',
             'text'          => 'nullable|string|max:65535',
-            'hashtags.*'    => 'nullable|string|max:255,'
+            'hashtags.*'    => 'nullable|string|max:255',
+
+            'image'         => 'nullable|image|mimes:png,jpg,jpeg',
+            'image-x'       => 'nullable|numeric',
+            'image-y'       => 'nullable|numeric',
+            'image-width'   => 'nullable|numeric',
+            'image-height'  => 'nullable|numeric',
         ];
     }
 
@@ -39,6 +45,7 @@ class ListItemRequest extends FormRequest
             'name'          => __('list_items.edit.name'),
             'text'          => __('list_items.edit.text'),
             'hashtags.*'    => __('list_items.edit.hashtags'),
+            'image'         => __('list_items.edit.image'),
         ];
     }
 }

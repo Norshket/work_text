@@ -26,6 +26,7 @@ class ListItemService
 
         $data = [
             'method' => 'create',
+            'title'  =>  __('list_items.titles.create'),
         ];
 
         return [
@@ -43,6 +44,13 @@ class ListItemService
     public function store(array $request): bool
     {
         $listItem = ListItem::create($request);
+
+        if (isset($request['image'])) {
+            $modelFile = $listItem->addMedia($request['image'])->toMediaCollection('images');
+            $path = $modelFile->getPath();
+            $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
+        }
+
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
@@ -56,6 +64,7 @@ class ListItemService
     {
         $data = [
             'model'     => $listItem->load('hashtags'),
+            'title'     =>  __('list_items.titles.edit'),
             'method'    => 'edit',
         ];
 
@@ -74,6 +83,14 @@ class ListItemService
     public function update(ListItem $listItem, array $request): bool
     {
         $listItem = tap($listItem)->update($request);
+
+        if (isset($request['image'])) {
+            $listItem->media()->delete();
+            $modelFile = $listItem->addMedia($request['image'])->toMediaCollection('images');
+            $path = $modelFile->getPath();
+            $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
+        }
+
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
@@ -163,7 +180,7 @@ class ListItemService
      */
     public function syncHashtags(ListItem $listItem, array $hashtags): bool
     {
-        $hashtagIds =[];
+        $hashtagIds = [];
         foreach ($hashtags as $item) {
             $hashtagIds[] = Hashtag::firstOrCreate(['name' => $item])->id;
         }

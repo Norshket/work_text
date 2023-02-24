@@ -316,6 +316,13 @@ return [
             'url'         => 'list-items',
             'label_color' => 'success',
         ],
+
+
+        [
+            'text'        => 'users',
+            'url'         => 'users',
+            'label_color' => 'success',
+        ],
         // ['header' => 'account_settings'],
         // [
         //     'text' => 'profile',
