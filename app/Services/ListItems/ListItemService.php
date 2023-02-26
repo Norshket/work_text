@@ -117,8 +117,8 @@ class ListItemService
 
             ->addColumn('actions', function ($item) {
                 $data = [
-                    'delete' => route('list-items.destroy', $item),
-                    'edit' => route('list-items.edit', $item)
+                    'delete' => route('list_items.destroy', $item),
+                    'edit' => route('list_items.edit', $item)
                 ];
                 return view('list_items.components.action_button')->with($data);
             })

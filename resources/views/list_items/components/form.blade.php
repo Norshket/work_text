@@ -80,7 +80,7 @@
             <button 
                 type="button"
                 class="btn btn-primary" 
-                onclick="listItem.update('{{ route('list-items.update' , $model->id) }}')"
+                onclick="listItem.update('{{ route('list_items.update' , $model->id) }}')"
             >
                 {{ __('actions.save') }}
             </button>
@@ -88,7 +88,7 @@
             <button 
                 type="button"
                 class="btn btn-primary" 
-                onclick="listItem.store('{{ route('list-items.store') }}')"
+                onclick="listItem.store('{{ route('list_items.store') }}')"
             >
                 {{ __('actions.save') }}
             </button>            

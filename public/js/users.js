@@ -8,9 +8,6 @@ let user  = {
 
     store:function(url){     
         let data = new FormData($('#create')[0])   
-        console.log(data);
-
-
         $.ajax({
             type:'POST',
             url: url ,
@@ -28,8 +25,14 @@ let user  = {
         });
     },
 
-    edit:function(url){
-    
+    edit:function(url){    
+        $.get(url).then(function(data){
+            user.showModal(data);
+        }).catch(({error}) => console.log(error))
+    },
+
+
+    permissions:function(url){
         $.get(url).then(function(data){
             user.showModal(data);
         }).catch(({error}) => console.log(error))
@@ -37,8 +40,6 @@ let user  = {
     
     update:function(url){
         let data = new FormData($('#create')[0])   
-        data.append('_method', "PUT");
-
         $.ajax({
             type:'POST',
             data: data,
@@ -67,4 +68,7 @@ let user  = {
         $('.modal-form').find('.modal-dialog').children().remove();
         $('#users-table').DataTable().ajax.reload();    
     }
+
+
+    
 }

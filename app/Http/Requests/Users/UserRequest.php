@@ -13,18 +13,32 @@ class UserRequest extends FormRequest
      */
     public function authorize()
     {
-        return false;
+        return true;
     }
-
+   
     /**
      * Get the validation rules that apply to the request.
      *
      * @return array<string, mixed>
      */
-    public function rules()
+    public function rules(): array
     {
         return [
-            //
+            'name'      => 'required|string|max:255',
+            'email'     => 'required|string|email',
+            'password'  => 'required|string|min:4',
+        ];
+    }
+
+    /**
+     * @return array
+     */
+    public function attributes(): array
+    {
+        return [
+            'name'      => __('users.edit.name'),
+            'email'     => __('users.edit.email'),
+            'password'  => __('users.edit.password'),
         ];
     }
 }

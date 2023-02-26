@@ -28,7 +28,7 @@ class UserController extends Controller
     public function index()
     {
         $data = $this->service->index();
-        return view('list_items.index')->with($data);
+        return view('users.index')->with($data);
     }
 
     /**

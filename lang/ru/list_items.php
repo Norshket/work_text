@@ -4,6 +4,7 @@ return [
     'titles' => [
         'edit'      => 'Изменить',
         'create'    => 'Создать',
+        'index'     => 'Список',
     ],
 
     'edit' => [

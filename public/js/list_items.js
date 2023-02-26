@@ -29,7 +29,6 @@ let listItem  = {
     },
 
     edit:function(url){
-    
         $.get(url).then(function(data){
             listItem.showModal(data);
         }).catch(({error}) => console.log(error))

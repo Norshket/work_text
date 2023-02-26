@@ -3,13 +3,13 @@
 
 @section('content')
     <div class="h2">
-        title
+        {{ __('list_items.titles.index') }}
     </div>
     <div class="card">
         <div class="card-body">
             <div class="raw">
                 <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="listItem.create('{{ route('list-items.create') }}')">
+                    <button type="button" class="btn btn-primary" onclick="listItem.create('{{ route('list_items.create') }}')">
                         Добавить
                     </button>
                 </div>

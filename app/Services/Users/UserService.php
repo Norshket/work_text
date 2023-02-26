@@ -25,12 +25,11 @@ class UserService
 
         $data = [
             'method' => 'create',
-            'title'  =>  __('users.titles.create'),
+            'title'  =>  __($this->translation."titles.create"),
         ];
 
         return [
             'action'    => 'success',
-            'method'    => 'create',
             'html'      => view('users.components.form')->with($data)->render()
         ];
     }
@@ -55,7 +54,7 @@ class UserService
     {
         $data = [
             'model'     => $user,
-            'title'     =>  __('users.titles.edit'),
+            'title'     =>  __($this->translation."titles.edit"),
             'method'    => 'edit',
         ];
 
@@ -88,7 +87,7 @@ class UserService
 
     public function getQueryDataTable()
     {
-        return User::select('id', 'name');
+        return User::select('id', 'name', 'email');
     }
 
 
@@ -99,7 +98,8 @@ class UserService
             ->addColumn('actions', function ($item) {
                 $data = [
                     'delete' => route('users.destroy', $item),
-                    'edit' => route('users.edit', $item)
+                    'edit' => route('users.edit', $item),
+                    'permissions' => route('user_permissions.edit', $item),
                 ];
                 return view('users.components.action_button')->with($data);
             })
@@ -140,6 +140,10 @@ class UserService
             [
                 'title' => __($this->translation . 'datatable.name'),
                 'data'  => 'name',
+            ],
+            [
+                'title' => __($this->translation . 'datatable.email'),
+                'data'  => 'email',
             ],
             [
                 'title'     => __($this->translation . 'datatable.actions'),

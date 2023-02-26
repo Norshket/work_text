@@ -1,4 +1,10 @@
 <form id="create" class="modal-content">
+
+    @if ($method == 'edit')       
+      @method('PUT')
+    @endif
+
+
     <div class="modal-header">
         <h1 class="modal-title fs-5" id="exampleModalLabel">{{ $title }}</h1>
     </div>
@@ -8,7 +14,7 @@
         <div class="row">      
             <div class="col-6">           
                 <div class="form-group ">
-                    <label for="name">{{ __('list_items.edit.name') }}</label>
+                    <label for="name">{{ __('users.edit.name') }}</label>
                     <input 
                         type="text"
                         class="form-control"
@@ -18,60 +24,29 @@
                     >
                 </div>
 
-                <div class="form-group">
-                    <label for="hashtags">{{ __('list_items.edit.hashtags') }}</label>
-                    <select 
-                        id="hashtags"
-                        name="hashtags[]"
-                        data-name="hashtags" 
-                        class="form-control ajax-select2"
-                        multiple="multiple"
-                        data-tags="true"
-                    >
-                        @if (isset($model) && $model->hashtags->isNotEmpty())
-                            @foreach ($model->hashtags as $hashtags)
-                                <option value="{{ $hashtags->name }}" selected>{{ $hashtags->name }}</option>
-                            @endforeach
-                        @endif
-                    </select>
-                </div>
-            </div>
-            <div class="col-6"> 
-                <label for="image">{{ __('list_items.edit.image') }}</label>
-                <input id="image" type="file" class="mb-3" name="image" data-url="">
-                <div     
-                    style="position:relative"
-                >
-
-                <input type="text" id="image-x" name="image-x" hidden value="">
-                <input type="text" id="image-y" name="image-y" hidden value="">
-                <input type="text" id="image-width" name="image-width" hidden value="150">
-                <input type="text" id="image-height" name="image-height" hidden value="150">
-                    <img 
-                        id="mage-previewer" 
-                        style="width: 150px"
-                        class="image-previewer"        
-                        src="{{ isset($model) && $model->getMedia('images')->isNotEmpty() ? $model->getMedia('images')[0]->getUrl() : '' }}"        
-                        data-cropzee="image" />
-                    
-                </div>
-
-            </div>
-        </div>
-
-        <div class="row">                
-                <div class="form-group col-12">
-                    <label for="text">{{ __('list_items.edit.text') }}</label>
-                    <textarea 
+                <div class="form-group ">
+                    <label for="email">{{ __('users.edit.email') }}</label>
+                    <input 
+                        type="email"
                         class="form-control"
-                        name="text" 
-                        id="text" 
-                        cols="30"
-                        rows="10"
-                    >{{ isset($model) ? $model->text : '' }}</textarea>                
+                        name="email" 
+                        id="email"
+                        value="{{ isset($model) ? $model->email : '' }}"
+                    >
                 </div>
-        </div>
 
+                <div class="form-group ">
+                    <label for="password">{{ __('users.edit.password') }}</label>
+                    <input 
+                        type="password"
+                        class="form-control"
+                        name="password" 
+                        id="password"
+                    >
+                </div>
+
+            </div>
+        </div>
     </div>
 
     <div class="modal-footer">        
@@ -80,7 +55,7 @@
             <button 
                 type="button"
                 class="btn btn-primary" 
-                onclick="listItem.update('{{ route('list-items.update' , $model->id) }}')"
+                onclick="user.update('{{ route('users.update' , $model->id) }}')"
             >
                 {{ __('actions.save') }}
             </button>
@@ -88,7 +63,7 @@
             <button 
                 type="button"
                 class="btn btn-primary" 
-                onclick="listItem.store('{{ route('list-items.store') }}')"
+                onclick="user.store('{{ route('users.store') }}')"
             >
                 {{ __('actions.save') }}
             </button>            
