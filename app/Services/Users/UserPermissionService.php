@@ -18,9 +18,9 @@ class UserPermissionService
     public function edit(User $user): array
     {
         $data = [
-            'pages'         => config('roles.permissions'),
-            'model'         => $user,
-        'title'         =>  __($this->translation ."titles.edit"),
+            'pages' => config('roles.permissions'),
+            'model' => $user,
+            'title' =>  __($this->translation . "titles.edit"),
         ];
 
         return [
@@ -37,7 +37,10 @@ class UserPermissionService
      */
     public function update(User $user, array $request): bool
     {
-        $user->assignRole($request);
+        $user->syncPermissions([]);
+        foreach ($request as $page => $permission) {
+            $user->givePermissionTo($page . '_' . $permission);
+        }
         return true;
     }
 }

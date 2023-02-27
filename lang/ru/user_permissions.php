@@ -6,8 +6,9 @@ return [
 
     'pages' => [
         'list_items'    => 'Список',
-        'users'         => 'Пользрователи',
+        'users'         => 'Пользователи',
     ],
+
     'permissions' => [
         'open'  =>'Открыто',
         'close' =>'Закрыто',

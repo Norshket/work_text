@@ -2,6 +2,7 @@
 
 namespace Database\Factories\ListItems;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -17,7 +18,9 @@ class ListItemFactory extends Factory
     public function definition()
     {
         return [
-            'name' => fake()->company(),
+            'name'      => fake()->company(),
+            'text'      => fake()->text(400),
+            'author_id' => User::inRandomOrder()->first()->id,
         ];
     }
 }

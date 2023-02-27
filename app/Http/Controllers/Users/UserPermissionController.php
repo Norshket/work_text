@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Users;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserDataTableRequest;
+use App\Http\Requests\Users\UserPermissionRequest;
 use App\Http\Requests\Users\UserRequest;
 use App\Models\User;
 use App\Services\Users\UserPermissionService;
@@ -40,7 +41,7 @@ class UserPermissionController extends Controller
      * 
      * @return JsonResponse
      */
-    public function update(User $user, UserRequest $request): JsonResponse
+    public function update(User $user, UserPermissionRequest $request): JsonResponse
     {
         $data = $this->service->update($user, $request->validated());
         return response()->json($data);

@@ -18,19 +18,20 @@ class PermissionTableSeeder extends Seeder
     {
         $config = config('roles');
 
-        foreach ($config['permission'] as $page => $permissions) {
+        foreach ($config['permissions'] as $page => $permissions) {
             foreach ($permissions as $permission) {
                 Permission::updateOrCreate(['name' => ($page . '_' .$permission)]);
             }
         }
 
+        
         foreach ($config['role_permissions'] as $key => $permissions) {
             $role = Role::firstOrCreate([
                 'name' => $key
             ], [
                 'display_name' => $config['roles'][$key]
             ]);
-            $role->givePermissionTo($permission);
+            $role->givePermissionTo($permissions);
         }
         
     }

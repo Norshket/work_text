@@ -42,10 +42,10 @@ let listItem  = {
             type:'POST',
             data: data,
             url: url ,
-            dataType: 'text',
             contentType: false,
             processData: false,
-            success: function(data){        
+            success: function(data){     
+                console.log(data);   
                 listItem.hideModal();
             },
             error: function({responseJSON}){

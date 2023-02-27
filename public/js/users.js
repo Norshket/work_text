@@ -44,7 +44,6 @@ let user  = {
             type:'POST',
             data: data,
             url: url ,
-            dataType: 'text',
             contentType: false,
             processData: false,
             success: function(data){        
