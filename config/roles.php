@@ -22,13 +22,8 @@ return [
 
     'role_permissions' => [
 
-        'admin' => [
-            'list_items_open',
-            'users_open',
-        ],
+        'admin' => [],
 
-        'user'  => [
-            'list_items_open',
-        ],
+        'user'  => [],
     ]
 ];

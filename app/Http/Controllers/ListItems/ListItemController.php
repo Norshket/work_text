@@ -26,6 +26,7 @@ class ListItemController extends Controller
      */
     public function index(): View
     {
+        $this->authorize('viewAny', ListItem::class);
         $data = $this->service->index();
         return view('list_items.index')->with($data);
     }
@@ -37,6 +38,7 @@ class ListItemController extends Controller
      */
     public function create(): JsonResponse
     {
+        $this->authorize('create', ListItem::class);
         $data = $this->service->create();
         return response()->json($data);
     }
@@ -50,6 +52,7 @@ class ListItemController extends Controller
      */
     public function store(ListItemRequest $request): JsonResponse
     {
+        $this->authorize('create', ListItem::class);
         $data = $this->service->store($request->validated());
         return response()->json($data);
     }
@@ -63,6 +66,7 @@ class ListItemController extends Controller
      */
     public function edit(ListItem $listItem): JsonResponse
     {
+        $this->authorize('update', $listItem);
         $data = $this->service->edit($listItem);
         return response()->json($data);
     }
@@ -77,6 +81,7 @@ class ListItemController extends Controller
      */
     public function update(ListItem $listItem, ListItemRequest $request): JsonResponse
     {
+        $this->authorize('update', $listItem);
         $data = $this->service->update($listItem, $request->validated());
         return response()->json($data);
     }
@@ -90,6 +95,7 @@ class ListItemController extends Controller
      */
     public function destroy(ListItem $listItem): JsonResponse
     {
+        $this->authorize('delete', $listItem);
         $data = $this->service->delete($listItem);
         return response()->json($data);
     }
@@ -101,6 +107,7 @@ class ListItemController extends Controller
      */
     public function datatable(ListItemDataTableRequest $request): JsonResponse
     {
+        $this->authorize('viewAny', ListItem::class);
         return $this->service->datatable($request->validated());
     }
 }

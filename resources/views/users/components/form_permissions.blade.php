@@ -10,16 +10,35 @@
 
 
 
+        {{-- @foreach ($pages as $page => $permissions)
+
+                    @foreach ($permissions as $permission)
+                      
+                      @dump($model->hasPermissionTo($page . '_' . $permission) )                      
+                
+                    
+                    @endforeach
+
+        @endforeach --}}
+
+
         @foreach ($pages as $page => $permissions)
             <div class="form-group row ">
-                <label 
-                    class="col-4" 
-                    for="permission">
-                        {{ __("user_permissions.pages.$page") }}</label>
+                <label class="col-4" for="permission">
+                    {{ __("user_permissions.pages.$page") }}
+                </label>
                 <div class="col-4">
-                    <select name="{{ $page }}" class="form-control">
+                    <select
+                        name="{{ $page }}"
+                        class="form-control"
+                    >
                         @foreach ($permissions as $permission)
-                            <option value="{{ $permission }}">
+                            <option 
+                                value="{{ $permission }}" 
+                                @if ($model->hasPermissionTo($page . '_' . $permission)) 
+                                    selected 
+                                @endif
+                            >
                                 {{ __("user_permissions.permissions.$permission") }}
                             </option>
                         @endforeach
@@ -33,11 +52,8 @@
     <div class="modal-footer">
 
 
-        <button 
-            type="button"
-            class="btn btn-primary"
-            onclick="user.update('{{ route('user_permissions.update', $model->id) }}')"
-            >
+        <button type="button" class="btn btn-primary"
+            onclick="user.update('{{ route('user_permissions.update', $model->id) }}')">
             {{ __('actions.save') }}
         </button>
 

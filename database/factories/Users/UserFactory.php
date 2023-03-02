@@ -25,6 +25,7 @@ class UserFactory extends Factory
     {
         return $this->afterCreating(function (User $user) {
             $user->assignRole('user');
+            $user->givePermissionTo(['list_items_open', 'users_close']);
         });
     }
 
@@ -35,13 +36,13 @@ class UserFactory extends Factory
      *
      * @return array
      */
-    public function definition():array
+    public function definition(): array
     {
         return [
             'name'              => fake()->name(),
             'email'             => fake()->unique()->safeEmail(),
             'email_verified_at' => now(),
-            'password'          => Hash::make('password'),
+            'password' => Hash::make('password'),
             'remember_token'    => Str::random(10),
         ];
     }

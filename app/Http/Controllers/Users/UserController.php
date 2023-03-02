@@ -27,6 +27,7 @@ class UserController extends Controller
      */
     public function index()
     {
+        $this->authorize('viewAny', User::class);
         $data = $this->service->index();
         return view('users.index')->with($data);
     }
@@ -38,6 +39,7 @@ class UserController extends Controller
      */
     public function create(): JsonResponse
     {
+        $this->authorize('create', User::class);
         $data = $this->service->create();
         return response()->json($data);
     }
@@ -51,6 +53,7 @@ class UserController extends Controller
      */
     public function store(UserRequest $request): JsonResponse
     {
+        $this->authorize('create', User::class);
         $data = $this->service->store($request->validated());
         return response()->json($data);
     }
@@ -63,6 +66,7 @@ class UserController extends Controller
      */
     public function edit(User $user)
     {
+        $this->authorize('update', $user);
         $data = $this->service->edit($user);
         return response()->json($data);
     }
@@ -77,6 +81,7 @@ class UserController extends Controller
      */
     public function update(User $user, UserRequest $request): JsonResponse
     {
+        $this->authorize('update', $user);
         $data = $this->service->update($user, $request->validated());
         return response()->json($data);
     }
@@ -90,6 +95,7 @@ class UserController extends Controller
      */
     public function destroy(User $user): JsonResponse
     {
+        $this->authorize('delete',  $user);
         $data = $this->service->delete($user);
         return response()->json($data);
     }
@@ -101,6 +107,7 @@ class UserController extends Controller
      */
     public function datatable(UserDataTableRequest $request): JsonResponse
     {
+        $this->authorize('viewAny', User::class);
         return $this->service->datatable($request->validated());
     }
 }

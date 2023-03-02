@@ -16,7 +16,7 @@ class AdminSeeder extends Seeder
      */
     public function run()
     {
-        User::firstOrCreate(
+        $user = User::firstOrCreate(
             [
                 'email' => 'admin@admin.ru'
             ],
@@ -25,5 +25,7 @@ class AdminSeeder extends Seeder
                 'password' => Hash::make('password'),
             ]
         )->assignRole('admin');
+
+        $user->givePermissionTo(['list_items_open', 'users_open']);
     }
 }

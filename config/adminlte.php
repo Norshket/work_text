@@ -295,13 +295,14 @@ return [
             'text'        => 'list_items',
             'url'         => 'list_items',
             'label_color' => 'success',
+            'can'         => ['list_items_open', 'list_items_read']
         ],
-
 
         [
             'text'        => 'users',
             'url'         => 'users',
             'label_color' => 'success',
+            'can'         => 'users_open'
         ],
     ],
 
@@ -368,7 +369,7 @@ return [
             'files' => [
                 [
                     'type' => 'js',
-                    'asset' => true,                  
+                    'asset' => true,
                     'location' => 'vendor/toastr/toastr.min.js',
                 ],
                 [

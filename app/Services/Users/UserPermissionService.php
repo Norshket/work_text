@@ -19,8 +19,8 @@ class UserPermissionService
     {
         $data = [
             'pages' => config('roles.permissions'),
-            'model' => $user,
-            'title' =>  __($this->translation . "titles.edit"),
+            'model' => $user->load('permissions'),
+            'title' => __($this->translation . "titles.edit"),
         ];
 
         return [
