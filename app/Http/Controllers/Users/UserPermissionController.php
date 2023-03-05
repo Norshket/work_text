@@ -29,7 +29,7 @@ class UserPermissionController extends Controller
      */
     public function edit(User $user)
     {
-        $this->authorize('update', User::class);
+        $this->authorize('update', $user);
         $data = $this->service->edit($user);
         return response()->json($data);
     }
@@ -44,7 +44,7 @@ class UserPermissionController extends Controller
      */
     public function update(User $user, UserPermissionRequest $request): JsonResponse
     {
-        $this->authorize('update', User::class);
+        $this->authorize('update', $user);
         $data = $this->service->update($user, $request->validated());
         return response()->json($data);
     }

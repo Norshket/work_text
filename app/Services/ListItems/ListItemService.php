@@ -4,6 +4,8 @@ namespace  App\Services\ListItems;
 
 use App\Models\Hashtags\Hashtag;
 use App\Models\ListItems\ListItem;
+use App\Models\User;
+use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -21,12 +23,17 @@ class ListItemService
         ];
     }
 
+    /**
+     * @return array
+     */
     public function  create(): array
     {
-
         $data = [
-            'method' => 'create',
-            'title'  =>  __('list_items.titles.create'),
+            'method'    => 'create',
+            'title'     =>  __('list_items.titles.create'),
+            'users'     => User::whereHas('roles', function ($query) {
+                $query->where('id', User::ROLE_USER);
+            })->pluck('name', 'id'),
         ];
 
         return [
@@ -43,6 +50,7 @@ class ListItemService
      */
     public function store(array $request): bool
     {
+        $request['author_id'] = auth()->id();
         $listItem = ListItem::create($request);
 
         if (isset($request['image'])) {
@@ -50,7 +58,7 @@ class ListItemService
             $path = $modelFile->getPath();
             $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
         }
-
+        $listItem->users()->sync($request['users']);
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
@@ -66,6 +74,9 @@ class ListItemService
             'model'     => $listItem->load('hashtags'),
             'title'     =>  __('list_items.titles.edit'),
             'method'    => 'edit',
+            'users'     => User::whereHas('roles', function ($query) {
+                $query->where('id', User::ROLE_USER);
+            })->pluck('name', 'id'),
         ];
 
         return [
@@ -90,7 +101,7 @@ class ListItemService
             $path = $modelFile->getPath();
             $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
         }
-
+        $listItem->users()->sync($request['users']);
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
@@ -107,11 +118,19 @@ class ListItemService
 
     public function getQueryDataTable()
     {
-        return ListItem::select('id', 'name', 'text');
+        return ListItem::select('id', 'name', 'text')
+            ->when(!auth()->user()->hasRole(User::ROLE_ADMIN), function ($query) {
+                $query->where('author_id', '=', auth()->id())
+                    ->orWhereHas('users', function ($query) {
+                        $query->where('id', '=', auth()->id());
+                    });
+            });
     }
 
-
-    public function datatable()
+    /**
+     * @return JsonResponse
+     */
+    public function datatable(): JsonResponse
     {
         return DataTables::of($this->getQueryDataTable())
 
@@ -126,7 +145,10 @@ class ListItemService
     }
 
 
-    public function viewDataTable()
+    /**
+     * @return Builder
+     */
+    public function viewDataTable(): Builder
     {
         return app(Builder::class)
             ->orders([0, 'asc'])

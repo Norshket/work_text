@@ -23,10 +23,14 @@ class ListItemRequest extends FormRequest
      */
     public function rules(): array
     {
+        
         return [
             'name'          => 'required|string|max:255',
             'text'          => 'nullable|string|max:65535',
             'hashtags.*'    => 'nullable|string|max:255',
+            'users'         => 'nullable|array',
+            'users.*'       => 'nullable|numeric|exists:users,id',
+
 
             'image'         => 'nullable|image|mimes:png,jpg,jpeg',
             'image-x'       => 'nullable|numeric',
@@ -46,6 +50,7 @@ class ListItemRequest extends FormRequest
             'text'          => __('list_items.edit.text'),
             'hashtags.*'    => __('list_items.edit.hashtags'),
             'image'         => __('list_items.edit.image'),
+            'users'         => __('list_items.edit.users'),
         ];
     }
 }

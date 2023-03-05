@@ -35,6 +35,27 @@
                         @endif
                     </select>
                 </div>
+
+                <div class="form-group">
+                    <label for="users">{{ __('list_items.edit.users') }}</label>
+                    <select 
+                        id="users"
+                        name="users[]"
+                        data-name="users" 
+                        class="form-control ajax-select2"
+                        multiple="multiple"
+                        data-tags="true"
+                    >
+                        @foreach ($users as $key => $user)
+                            <option 
+                                value="{{ $key }}"                                 
+                                @if( isset($model) && $model->users->contains('id',  $key )) selected  @endif                             
+                            >
+                                {{ $user }}
+                            </option>
+                        @endforeach                      
+                    </select>
+                </div>
             </div>
             <div class="col-6"> 
                 <label for="image">{{ __('list_items.edit.image') }}</label>

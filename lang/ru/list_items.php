@@ -12,6 +12,7 @@ return [
         'hashtags'  => 'Теги',
         'text'      => 'Текст',
         'image'     => 'Изображение',
+        'users'     => 'Поделитсья:'
     ],
 
     'datatable' => [

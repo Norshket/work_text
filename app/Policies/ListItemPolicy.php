@@ -30,6 +30,8 @@ class ListItemPolicy
      */
     public function view(User $user, ListItem $listItem)
     {
+        
+
         return $user->can('list_items_read') || $user->can('list_items_open');
     }
 

@@ -17,6 +17,9 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles;
 
+    public const ROLE_ADMIN = 1;
+    public const ROLE_USER = 2;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -56,7 +59,7 @@ class User extends Authenticatable
 
     public function listItems()
     {
-        return $this->hasMany(ListItem::class);
+        return $this->hasMany(ListItem::class, 'author_id');
     }
 
 

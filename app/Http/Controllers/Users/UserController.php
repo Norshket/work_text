@@ -8,7 +8,6 @@ use App\Http\Requests\Users\UserRequest;
 use App\Models\User;
 use App\Services\Users\UserService;
 use Illuminate\Http\JsonResponse;
-use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
