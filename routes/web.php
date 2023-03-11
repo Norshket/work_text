@@ -29,7 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('list_items')->name('list_items.')->group(function () {
         Route::get('/datatable', [ListItemController::class, 'datatable'])->name('datatable');
-        Route::resource('/', ListItemController::class)->except('show')->parameters(['' => 'listItem']);
+        Route::resource('/', ListItemController::class)->parameters(['' => 'listItem']);
     });
 
     Route::prefix('users')->name('users.')->group(function () {

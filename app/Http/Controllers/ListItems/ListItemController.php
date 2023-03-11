@@ -57,6 +57,19 @@ class ListItemController extends Controller
         return response()->json($data);
     }
 
+
+    /**
+     * Show the form for creating a new resource.
+     *           
+     * @return JsonResponse
+     */
+    public function show(ListItem $listItem): JsonResponse
+    {
+        $this->authorize('view', $listItem);
+        $data = $this->service->show($listItem);
+        return response()->json($data);
+    }
+
     /**
      * Show the form for editing the specified resource.
      *

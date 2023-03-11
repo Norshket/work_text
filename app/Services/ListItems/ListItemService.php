@@ -63,6 +63,28 @@ class ListItemService
         return true;
     }
 
+
+
+    /**
+     * @param ListItem $listItem
+     * 
+     * @return array
+     */
+    public function show(ListItem $listItem): array
+    {
+        $data = [
+            'model'     => $listItem->load(['hashtags', 'users', 'media']),
+            'title'     =>  __('list_items.titles.show'),
+        ];
+
+        return [
+            'action'    => 'success',
+            'html'      => view('list_items.components.show')->with($data)->render()
+        ];
+    }
+
+
+
     /**
      * @param ListItem $listItem
      * 
@@ -95,6 +117,11 @@ class ListItemService
     {
         $listItem = tap($listItem)->update($request);
 
+        if ($request['delete_image']) {
+            $listItem->media()->delete();
+        }
+
+
         if (isset($request['image'])) {
             $listItem->media()->delete();
             $modelFile = $listItem->addMedia($request['image'])->toMediaCollection('images');
@@ -118,7 +145,7 @@ class ListItemService
 
     public function getQueryDataTable()
     {
-        return ListItem::select('id', 'name', 'text')
+        return ListItem::select('id', 'name', 'text', 'author_id')
             ->when(!auth()->user()->hasRole(User::ROLE_ADMIN), function ($query) {
                 $query->where('author_id', '=', auth()->id())
                     ->orWhereHas('users', function ($query) {
@@ -135,11 +162,7 @@ class ListItemService
         return DataTables::of($this->getQueryDataTable())
 
             ->addColumn('actions', function ($item) {
-                $data = [
-                    'delete' => route('list_items.destroy', $item),
-                    'edit' => route('list_items.edit', $item)
-                ];
-                return view('list_items.components.action_button')->with($data);
+                return view('list_items.components.action_button')->with(['model' =>  $item]);
             })
             ->toJson();
     }

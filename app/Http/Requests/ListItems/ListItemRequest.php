@@ -22,16 +22,16 @@ class ListItemRequest extends FormRequest
      * @return array<string, mixed>
      */
     public function rules(): array
-    {
-        
+    {        
         return [
             'name'          => 'required|string|max:255',
             'text'          => 'nullable|string|max:65535',
             'hashtags.*'    => 'nullable|string|max:255',
             'users'         => 'nullable|array',
             'users.*'       => 'nullable|numeric|exists:users,id',
+            
 
-
+            'delete_image'  => 'required|boolean',
             'image'         => 'nullable|image|mimes:png,jpg,jpeg',
             'image-x'       => 'nullable|numeric',
             'image-y'       => 'nullable|numeric',

@@ -5,6 +5,10 @@
 
     <div class="modal-body">
 
+        @if ($method == 'edit')          
+            @method('PUT')
+        @endif
+
         <div class="row">      
             <div class="col-6">           
                 <div class="form-group ">
@@ -57,24 +61,39 @@
                     </select>
                 </div>
             </div>
-            <div class="col-6"> 
-                <label for="image">{{ __('list_items.edit.image') }}</label>
-                <input id="image" type="file" class="mb-3" name="image" data-url="">
-                <div     
-                    style="position:relative"
-                >
 
-                <input type="text" id="image-x" name="image-x" hidden value="">
-                <input type="text" id="image-y" name="image-y" hidden value="">
-                <input type="text" id="image-width" name="image-width" hidden value="150">
-                <input type="text" id="image-height" name="image-height" hidden value="150">
-                    <img 
-                        id="mage-previewer" 
-                        style="width: 150px"
-                        class="image-previewer"        
-                        src="{{ isset($model) && $model->getMedia('images')->isNotEmpty() ? $model->getMedia('images')[0]->getUrl() : '' }}"        
-                        data-cropzee="image" />
+            <div class="col-6"> 
+
+                <div class="row align-items-center">  
                     
+                    <div class="col-10">
+                        <label for="image">{{ __('list_items.edit.image') }}</label>
+                        <input id="image" type="file" class="mb-3" name="image" data-url="">
+                    </div>
+
+                    <div class="col-2">
+                        <button class="btn btn-danger" type="button" onclick="listItem.deleteImage()">
+                            <i class="fas fa-trash"></i>
+                        </button>
+
+                        <input id="delete-image" name="delete-image" hidden type="checkbox">
+                    </div>
+              
+                  
+                    <div  class="col-12" style="position:relative">                    
+                        <input type="text" id="image-x" name="image-x" hidden value="">
+                        <input type="text" id="image-y" name="image-y" hidden value="">
+                        <input type="text" id="image-width" name="image-width" hidden value="150">
+                        <input type="text" id="image-height" name="image-height" hidden value="150">
+                        <img 
+                            id="image-previewer" 
+                            style="width: 150px"
+                            class="image-previewer"        
+                            src="{{ isset($model) && $model->getMedia('images')->isNotEmpty() ? $model->getMedia('images')[0]->getUrl() : '' }}"        
+                            data-cropzee="image"
+                         />                        
+                    </div>
+
                 </div>
 
             </div>

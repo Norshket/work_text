@@ -6,10 +6,10 @@ let listItem  = {
         }).catch(({error}) => console.log(error))
     },
 
-    store:function(url){     
-        let data = new FormData($('#create')[0])   
-        console.log(data);
+    store:function(url){    
 
+        let data = new FormData($('#create')[0]);
+        data.append('delete_image', Number($('#delete-image').prop('checked'))) 
 
         $.ajax({
             type:'POST',
@@ -35,17 +35,18 @@ let listItem  = {
     },
     
     update:function(url){
-        let data = new FormData($('#create')[0])   
-        data.append('_method', "PUT");
+
+        let data = new FormData($('#create')[0]);
+        data.append('delete_image', Number($('#delete-image').prop('checked'))) 
+
 
         $.ajax({
-            type:'POST',
+            type: 'POST',
             data: data,
             url: url ,
             contentType: false,
             processData: false,
-            success: function(data){     
-                console.log(data);   
+            success: function(data){      
                 listItem.hideModal();
             },
             error: function({responseJSON}){
@@ -82,5 +83,21 @@ let listItem  = {
         $('.modal-form').hide();
         $('.modal-form').find('.modal-dialog').children().remove();
         $('#list_items-table').DataTable().ajax.reload();    
+    },
+
+    deleteImage:function()
+    { 
+        $("#image").val('');
+        $('#delete-image').attr('checked', true);
+
+        if( $('#image-previewer').prop("tagName") === 'CANVAS'){
+            var canvas = document.getElementById('image-previewer');
+            var context = canvas.getContext('2d');
+            context.clearRect(0, 0, canvas.width, canvas.height); 
+        }     
+        if( $('#image-previewer').prop("tagName") === 'IMG'){
+            $('#image-previewer').attr('src', '#')
+            $('#image-previewer').attr('alt', '')
+        }          
     }
 }
