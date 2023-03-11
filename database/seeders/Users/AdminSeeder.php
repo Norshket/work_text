@@ -22,7 +22,7 @@ class AdminSeeder extends Seeder
             ],
             [
                 'name' => 'Aдминистратор',
-                'password' => Hash::make('password'),
+                'password' => 'password',
             ]
         )->assignRole('admin');
 
