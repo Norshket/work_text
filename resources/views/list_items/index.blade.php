@@ -7,13 +7,41 @@
     </div>
     <div class="card">
         <div class="card-body">
-            <div class="raw">
-                <div class="col-12">
-                    <button type="button" class="btn btn-primary" onclick="listItem.create('{{ route('list_items.create') }}')">
+            <div class="row">
+                <div class="col-auto">
+                    <button type="button" class="btn btn-primary"
+                        onclick="listItem.create('{{ route('list_items.create') }}')">
                         Добавить
                     </button>
                 </div>
             </div>
+            <form class="row my-2" id="dt_filters">
+
+                <div class="col-auto form-group">
+                    <input 
+                        type="text"
+                        class="form-control"
+                        placeholder="{{ __('list_items.datatable.search') }}"
+                        onchange="Main.searchDataTable(this, 'list_items-table')"
+                        name="search">
+                </div>
+
+                <select 
+                    class="col-auto" 
+                    name="hashtag_id[]" 
+                    multiple
+                    onchange="Main.updateDataTable(event, 'list_items-table')"
+                    data-placeholder="{{ __('list_items.datatable.hashtags') }}"
+                    class="ajax-select2"
+                >
+                    @foreach ($hashtags as $hashtag)
+                        <option value="{{ $hashtag->id }}">{{ $hashtag->name }}</option>
+                    @endforeach
+                </select>
+
+
+
+            </form>
             <div class="raw">
                 {{ $dataTable->table() }}
             </div>

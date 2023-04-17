@@ -7,21 +7,6 @@
     </div>
 
     <div class="modal-body">
-
-
-
-        {{-- @foreach ($pages as $page => $permissions)
-
-                    @foreach ($permissions as $permission)
-                      
-                      @dump($model->hasPermissionTo($page . '_' . $permission) )                      
-                
-                    
-                    @endforeach
-
-        @endforeach --}}
-
-
         @foreach ($pages as $page => $permissions)
             <div class="form-group row ">
                 <label class="col-4" for="permission">

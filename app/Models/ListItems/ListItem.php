@@ -19,6 +19,7 @@ class ListItem extends Model implements HasMedia
     protected $fillable = [
         'name',
         'text',
+        'is_done',
         'author_id',
     ];
 

@@ -64,10 +64,15 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+
+        $user = User::create([
             'name' => $data['name'],
             'email' => $data['email'],
-            'password' =>$data['password'],
+            'password' => $data['password'],
         ]);
+        $user->assignRole('user');
+        $user->givePermissionTo(['list_items_open']);
+
+        return  $user;
     }
 }

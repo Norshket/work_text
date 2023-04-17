@@ -7,7 +7,7 @@
         </div>
 
         <div class="col-6">
-            <button class="btn btn-danger" onclick="Main.showDeleteModal('{{ route('list_items.destroy', $model) }}')">
+            <button class="btn btn-danger" onclick="Main.showDeleteModal('{{ route('list_items.destroy', $model)  }}', 'list_items-table')">
                 <i class="fas fa-trash"></i>
             </button>
         </div>

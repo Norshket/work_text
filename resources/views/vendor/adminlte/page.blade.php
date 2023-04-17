@@ -52,6 +52,7 @@
 @stop
 
 @section('adminlte_js')
+    <script type="text/javascript" src="//cdnjs.cloudflare.com/ajax/libs/lodash.js/0.10.0/lodash.min.js"></script>
     <script>
         window.socketId = null;
         window.token = $('meta[name="csrf-token"]').attr('content');

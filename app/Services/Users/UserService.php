@@ -25,7 +25,7 @@ class UserService
 
         $data = [
             'method' => 'create',
-            'title'  =>  __($this->translation."titles.create"),
+            'title'  =>  __($this->translation . "titles.create"),
         ];
 
         return [
@@ -54,7 +54,7 @@ class UserService
     {
         $data = [
             'model'     => $user,
-            'title'     =>  __($this->translation."titles.edit"),
+            'title'     =>  __($this->translation . "titles.edit"),
             'method'    => 'edit',
         ];
 
@@ -78,11 +78,19 @@ class UserService
     /**
      * @param User $user
      * 
-     * @return bool
+     * @return array
      */
-    public function delete(User $user): bool
+    public function delete(User $user): array
     {
-        return $user->delete();
+        $delete = false;
+        if ($user->checkRelationship()) {
+            $delete = $user->delete();
+        }
+
+        return [
+            'is_delete' => $delete,
+            'message' => $delete ? __('toastr.success') : __('toastr.error')
+        ];
     }
 
     public function getQueryDataTable()

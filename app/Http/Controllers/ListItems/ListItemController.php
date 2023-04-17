@@ -5,6 +5,7 @@ namespace App\Http\Controllers\ListItems;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ListItems\ListItemDataTableRequest;
 use App\Http\Requests\ListItems\ListItemRequest;
+use App\Http\Requests\ListItems\ListItemTogleRequest;
 use App\Models\ListItems\ListItem;
 use App\Services\ListItems\ListItemService;
 use Illuminate\Http\JsonResponse;
@@ -96,6 +97,19 @@ class ListItemController extends Controller
     {
         $this->authorize('update', $listItem);
         $data = $this->service->update($listItem, $request->validated());
+        return response()->json($data);
+    }
+
+    /**
+     * @param ListItem $listItem
+     * @param ListItemTogleRequest $request
+     * 
+     * @return JsonResponse
+     */
+    public function togle(ListItem $listItem, ListItemTogleRequest $request): JsonResponse
+    {
+        $this->authorize('update', $listItem);
+        $data = $this->service->togle($listItem, $request->validated());
         return response()->json($data);
     }
 

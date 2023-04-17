@@ -5,6 +5,7 @@ namespace App\Models;
 // use Illuminate\Contracts\Auth\MustVerifyEmail;
 
 use App\Models\ListItems\ListItem;
+use App\Models\Traits\ModelTrait;
 use Database\Factories\Users\UserFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -15,7 +16,7 @@ use Spatie\Permission\Traits\HasRoles;
 
 class User extends Authenticatable
 {
-    use HasApiTokens, HasFactory, Notifiable, HasRoles;
+    use HasApiTokens, HasFactory, Notifiable, HasRoles, ModelTrait;
 
     public const ROLE_ADMIN = 1;
     public const ROLE_USER = 2;
@@ -50,6 +51,15 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
+    ];
+
+
+    /**
+     * связи провряемы при удалении 
+     */
+    protected $listRelationships = [
+        'listItems',
+        'cooperativeListItems'
     ];
 
     public function cooperativeListItems(): BelongsToMany

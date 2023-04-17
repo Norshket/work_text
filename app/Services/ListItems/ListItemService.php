@@ -8,6 +8,7 @@ use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
+use Illuminate\Database\Eloquent\Builder as EloquentBuilder;
 
 class ListItemService
 {
@@ -20,6 +21,7 @@ class ListItemService
     {
         return [
             'dataTable' => $this->viewDataTable(),
+            'hashtags' => Hashtag::get()
         ];
     }
 
@@ -121,17 +123,29 @@ class ListItemService
             $listItem->media()->delete();
         }
 
-
         if (isset($request['image'])) {
             $listItem->media()->delete();
             $modelFile = $listItem->addMedia($request['image'])->toMediaCollection('images');
             $path = $modelFile->getPath();
             $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
         }
-        $listItem->users()->sync($request['users']);
+        $listItem->users()->sync($request['users'] ?? []);
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
+
+    /**
+     * @param ListItem $listItem
+     * @param array $request
+     * 
+     * @return bool
+     */
+    public function togle(ListItem $listItem, array $request): bool
+    {
+        return $listItem->update($request);
+    }
+
+
 
     /**
      * @param ListItem $listItem
@@ -143,9 +157,12 @@ class ListItemService
         return $listItem->delete();
     }
 
-    public function getQueryDataTable()
+    /**
+     * @return EloquentBuilder
+     */
+    public function getQueryDataTable(): EloquentBuilder
     {
-        return ListItem::select('id', 'name', 'text', 'author_id')
+        return ListItem::select('list_items.id', 'list_items.name', 'list_items.text', 'list_items.author_id', 'list_items.is_done')
             ->when(!auth()->user()->hasRole(User::ROLE_ADMIN), function ($query) {
                 $query->where('author_id', '=', auth()->id())
                     ->orWhereHas('users', function ($query) {
@@ -155,18 +172,52 @@ class ListItemService
     }
 
     /**
+     * @param array $request
+     * 
      * @return JsonResponse
      */
-    public function datatable(): JsonResponse
+    public function datatable(array $request): JsonResponse
     {
         return DataTables::of($this->getQueryDataTable())
+            ->editColumn('is_done', function ($item) {
+                return view('list_items.components.is_done')->with(['model' => $item]);
+            })
 
             ->addColumn('actions', function ($item) {
                 return view('list_items.components.action_button')->with(['model' =>  $item]);
             })
+
+            ->filter(function (EloquentBuilder $query) use ($request) {
+                $this->applyFilters($query, $request);
+            }, true)
             ->toJson();
     }
 
+
+    /**
+     * @param EloquentBuilder $query
+     * @param array $request
+     * 
+     * @return void
+     */
+    protected function applyFilters(EloquentBuilder $query, array $request): void
+    {
+        if (isset($request['search']) && !empty($request['search']['value'])) {
+            $keyword = $request['search']['value'];
+            if (isset($keyword)) {
+                $serch = mb_strtolower(trim($keyword));
+                $query->whereRaw("users.id = ?", $keyword)
+                    ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $serch . "%")
+                    ->orWhereRaw("LOWER(list_items.text) LIKE ?", "%" . $serch . "%");
+            }
+        }
+
+        if (!empty($request['hashtag_id'])) {
+            $query->whereHas('hashtags', function ($item) use ($request) {
+                return $item->whereIn('hashtags.id', $request['hashtag_id']);
+            });
+        }
+    }
 
     /**
      * @return Builder
@@ -176,8 +227,8 @@ class ListItemService
         return app(Builder::class)
             ->orders([0, 'asc'])
             ->setTableId('list_items-table')
-            ->ajax(route('list_items.datatable'))
             ->pageLength(10)
+            ->ajaxWithForm(route('list_items.datatable'), '#dt_filters')
             ->columns($this->getTableColumns())
             ->parameters([
                 'paging' => true,
@@ -199,6 +250,11 @@ class ListItemService
             [
                 'title' => __($this->translation . 'datatable.id'),
                 'data'  => 'id',
+                'width' => '5%'
+            ],
+            [
+                'title' => __($this->translation . 'datatable.is_done'),
+                'data'  => 'is_done',
                 'width' => '5%'
             ],
             [

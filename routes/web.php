@@ -29,6 +29,7 @@ Route::middleware('auth')->group(function () {
 
     Route::prefix('list_items')->name('list_items.')->group(function () {
         Route::get('/datatable', [ListItemController::class, 'datatable'])->name('datatable');
+        Route::put('/{listItem}/togle', [ListItemController::class, 'togle'])->name('togle');
         Route::resource('/', ListItemController::class)->parameters(['' => 'listItem']);
     });
 

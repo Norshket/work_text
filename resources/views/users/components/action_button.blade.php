@@ -13,8 +13,8 @@
     </div>
 
     <div class="col-4">
-        <button class="btn btn-danger" onclick="Main.showDeleteModal('{{ $delete }}')">
+        <button class="btn btn-danger" onclick="Main.showDeleteModal('{{ $delete }}', 'users-table')">
             <i class="fas fa-trash"></i>
         </button>
-    </div>   
+    </div>
 </div>
