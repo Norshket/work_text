@@ -18,6 +18,7 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable, HasRoles, ModelTrait;
 
+    public const ADMIN = 1;
     public const ROLE_ADMIN = 1;
     public const ROLE_USER = 2;
 

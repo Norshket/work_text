@@ -3,6 +3,8 @@
 namespace  App\Services\Users;
 
 use App\Models\User;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Yajra\DataTables\Facades\DataTables;
 use Yajra\DataTables\Html\Builder;
 
@@ -41,7 +43,10 @@ class UserService
      */
     public function store(array $request): bool
     {
-        User::create($request);
+        $user = User::create($request);
+        $user->assignRole('user');
+        $user->givePermissionTo(['list_items_open', 'users_close']);
+
         return true;
     }
 
@@ -108,6 +113,10 @@ class UserService
                     'delete' => route('users.destroy', $item),
                     'edit' => route('users.edit', $item),
                     'permissions' => route('user_permissions.edit', $item),
+
+                    'canDelete' => Auth::user()->can('delete', $item),
+                    'canUpdate' => Auth::user()->can('update', $item),
+                    'isAdmin' => $item->id === User::ADMIN
                 ];
                 return view('users.components.action_button')->with($data);
             })

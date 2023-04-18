@@ -60,7 +60,7 @@ class ListItemService
             $path = $modelFile->getPath();
             $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
         }
-        $listItem->users()->sync($request['users']??[]);
+        $listItem->users()->sync($request['users'] ?? []);
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
@@ -164,10 +164,12 @@ class ListItemService
     {
         return ListItem::select('list_items.id', 'list_items.name', 'list_items.text', 'list_items.author_id', 'list_items.is_done')
             ->when(!auth()->user()->hasRole(User::ROLE_ADMIN), function ($query) {
-                $query->where('author_id', '=', auth()->id())
-                    ->orWhereHas('users', function ($query) {
-                        $query->where('id', '=', auth()->id());
-                    });
+                $query->where(function ($query) {
+                    $query->where('author_id', '=', auth()->id())
+                        ->orWhereHas('users', function ($query) {
+                            $query->where('id', '=', auth()->id());
+                        });
+                });
             });
     }
 
@@ -201,17 +203,18 @@ class ListItemService
      * @return void
      */
     protected function applyFilters(EloquentBuilder $query, array $request): void
-    {        
-        if (isset($request['search']) && !empty($request['search'])) {
+    {
+        if (isset($request['search'])) {
             $search = mb_strtolower($request['search']);
-            $query->whereRaw("list_items.id = ?", $search)
-                ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $search . "%")
-                ->orWhereRaw("LOWER(list_items.text) LIKE ?", "%" . $search . "%");
+            $query->where(function ($query) use ($search) {
+                $query->whereRaw("list_items.id = ?", $search)
+                    ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $search . "%");
+            });
         }
 
         if (!empty($request['hashtag_id'])) {
             $query->whereHas('hashtags', function ($item) use ($request) {
-                return $item->whereIn('hashtags.id', $request['hashtag_id']);
+                $item->whereIn('hashtags.id', $request['hashtag_id']);
             });
         }
     }
@@ -247,16 +250,19 @@ class ListItemService
             [
                 'title' => __($this->translation . 'datatable.id'),
                 'data'  => 'id',
-                'width' => '5%'
+                'width' => '5%',
+                'searchable' => false,
             ],
             [
                 'title' => __($this->translation . 'datatable.is_done'),
                 'data'  => 'is_done',
-                'width' => '5%'
+                'width' => '5%',
+                'searchable' => false,
             ],
             [
                 'title' => __($this->translation . 'datatable.name'),
                 'data'  => 'name',
+                'searchable' => false,
             ],
             [
                 'title'     => __($this->translation . 'datatable.actions'),

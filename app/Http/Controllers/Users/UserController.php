@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Users;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Users\UserDataTableRequest;
 use App\Http\Requests\Users\UserRequest;
+use App\Http\Requests\Users\UserUpdateRequest;
 use App\Models\User;
 use App\Services\Users\UserService;
 use Illuminate\Http\JsonResponse;
@@ -74,11 +75,11 @@ class UserController extends Controller
      * Update the specified resource in storage.
      *
      * @param User $user
-     * @param UserRequest $request
+     * @param UserUpdateRequest $request
      * 
      * @return JsonResponse
      */
-    public function update(User $user, UserRequest $request): JsonResponse
+    public function update(User $user, UserUpdateRequest $request): JsonResponse
     {
         $this->authorize('update', $user);
         $data = $this->service->update($user, $request->validated());
