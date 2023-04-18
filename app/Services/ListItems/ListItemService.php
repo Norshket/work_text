@@ -60,7 +60,7 @@ class ListItemService
             $path = $modelFile->getPath();
             $listItem->crop($path, $request['image-width'], $request['image-height'], $request['image-x'], $request['image-y']);
         }
-        $listItem->users()->sync($request['users']);
+        $listItem->users()->sync($request['users']??[]);
         $this->syncHashtags($listItem, $request['hashtags'] ?? []);
         return true;
     }
