@@ -29,9 +29,8 @@ class ListItemDataTableRequest extends FormRequest
             "order"         => 'nullable|array',
             'start'         => 'nullable|numeric',
             'length'        => 'nullable|numeric',
-            'search.value'  => 'nullable|string|max:255',
-            'search.regex'  => 'nullable|string',
-
+            
+            'search'        => 'nullable|string|max:255',
             'hashtag_id'    => 'nullable|array',
             'hashtag_id.*'  => 'nullable|numeric|exists:hashtags,id',
         ];
