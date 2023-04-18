@@ -201,15 +201,12 @@ class ListItemService
      * @return void
      */
     protected function applyFilters(EloquentBuilder $query, array $request): void
-    {
-        if (isset($request['search']) && !empty($request['search']['value'])) {
-            $keyword = $request['search']['value'];
-            if (isset($keyword)) {
-                $serch = mb_strtolower(trim($keyword));
-                $query->whereRaw("list_items.id = ?", $serch)
-                    ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $serch . "%")
-                    ->orWhereRaw("LOWER(list_items.text) LIKE ?", "%" . $serch . "%");
-            }
+    {        
+        if (isset($request['search']) && !empty($request['search'])) {
+            $search = mb_strtolower($request['search']);
+            $query->whereRaw("list_items.id = ?", $search)
+                ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $search . "%")
+                ->orWhereRaw("LOWER(list_items.text) LIKE ?", "%" . $search . "%");
         }
 
         if (!empty($request['hashtag_id'])) {
