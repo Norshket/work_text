@@ -206,7 +206,7 @@ class ListItemService
             $keyword = $request['search']['value'];
             if (isset($keyword)) {
                 $serch = mb_strtolower(trim($keyword));
-                $query->whereRaw("users.id = ?", $keyword)
+                $query->whereRaw("list_items.id = ?", $serch)
                     ->orWhereRaw("LOWER(list_items.name) LIKE ?", "%" . $serch . "%")
                     ->orWhereRaw("LOWER(list_items.text) LIKE ?", "%" . $serch . "%");
             }
